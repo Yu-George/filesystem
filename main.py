@@ -7,25 +7,31 @@ class Directory:
         self.subdirectories = {}
         self.files = []
         self.parent = parent
-        self.path = ""
-
-
+        self.path = path
 class FileSystem:
     def __init__(self):
         self.current_dir = None
         self.root = Directory("", None, "")
 
     def cd(self, path):
+        # go back 1 level
         if path == "..":
-            # Check if current directory is root
             if self.current_dir.name != "":
                 self.current_dir = self.current_dir.parent
+        # go back to root
+        elif path == "~" or path == "":
+            self.current_dir = self.root
         else:
-            if path in self.current_dir.subdirectories:
-                self.current_dir = self.current_dir.subdirectories[path]
-            else:
-                print("Directory does not exist")
-
+            directories = path.split("/")
+            for d in directories:
+                print(d)
+                if d == "":
+                    continue
+                if d in self.current_dir.subdirectories:
+                    self.current_dir = self.current_dir.subdirectories[d]
+                else:
+                    print("Directory does not exist")
+                    break
     def ls(self):
         for directory in self.current_dir.subdirectories:
             print(directory)
@@ -41,21 +47,20 @@ class FileSystem:
 
     def main(self):
         self.current_dir = self.root
-        arg = ""
         while True:
             command = input(f"{self.current_dir.path}$ ")
             if command == "exit":
                 break
             elif command.split()[0] == "cd":
-                arg = command.split()[1] if len(command) > 2 else ""
+                arg = command.split()[1] if len(command.split()) > 1 else ""
                 self.cd(arg)
             elif command == "ls":
                 self.ls()
             elif command.split()[0] == "mkdir":
-                arg = command.split()[1] if len(command) > 5 else ""
+                arg = command.split()[1] if len(command.split()) > 1 else ""
                 self.mkdir(arg)
             elif command.split()[0] == "touch":
-                arg = command.split()[1] if len(command) > 5 else ""
+                arg = command.split()[1] if len(command.split()) > 1 else ""
                 self.touch(arg)
             else:
                 print("Invalid command")
