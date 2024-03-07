@@ -50,6 +50,9 @@ class FileSystem:
         self.current_dir.subdirectories[directory_name] = new_directory
 
     def touch(self, file_name):
+        if not re.match('^[^<>:"/\\|?*]+$', file_name):
+            print("Invalid file name")
+            return
         self.current_dir.files.append(file_name)
 
     def main(self):
