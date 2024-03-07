@@ -44,17 +44,19 @@ class FileSystem:
         for file in self.current_dir.files:
             print("\t-" + file)
 
-    def mkdir(self, path):
-        directories = path.split("/")
-        current_dir = self.current_dir
-        for d in directories:
-            if d not in current_dir.subdirectories:
-                if not re.match('^[^<>:"/\\|?*]+$', d):
-                    print("Invalid directory name")
-                else:
-                    new_directory = Directory(d, current_dir, current_dir.path + "/" + d)
-                    current_dir.subdirectories[d] = new_directory
-            current_dir = current_dir.subdirectories[d]
+    def mkdir(self, paths):
+        for path in paths:
+            directories = path.split("/")
+            current_dir = self.current_dir
+            for d in directories:
+                if d not in current_dir.subdirectories:
+                    if not re.match('^[^<>:"/\\|?*]+$', d):
+                        print("Invalid directory name")
+                    else:
+                        new_directory = Directory(d, current_dir, current_dir.path + "/" + d)
+                        current_dir.subdirectories[d] = new_directory
+                current_dir = current_dir.subdirectories[d]
+
     def touch(self, file_name):
         if not re.match('^[^<>:"/\\|?*]+$', file_name):
             print("Invalid file name")
@@ -65,22 +67,19 @@ class FileSystem:
         self.current_dir = self.root
         while True:
             command = input(f"{self.current_dir.path}$ ")
-            if command == "exit":
-                break
-            elif command.split()[0] == "cd":
-                arg = command.split()[1] if len(command.split()) > 1 else ""
-                self.cd(arg)
-            elif command == "ls":
-                self.ls()
-            elif command.split()[0] == "mkdir":
-                arg = command.split()[1] if len(command.split()) > 1 else ""
-                self.mkdir(arg)
-            elif command.split()[0] == "touch":
-                arg = command.split()[1] if len(command.split()) > 1 else ""
-                self.touch(arg)
-            else:
-                print("Invalid command")
-
+            match command.split():
+                case ["exit"]:
+                    break
+                case ["cd", path]:
+                    self.cd(path)
+                case ["mkdir", *dirs]:
+                    self.mkdir(dirs)
+                case ["ls"]:
+                    self.ls()
+                case ["touch", file]:
+                    self.touch(file)
+                case _:
+                    print("Invalid Command")
 
 if __name__ == "__main__":
     fs = FileSystem()
