@@ -8,6 +8,8 @@ class Directory:
         self.files = []
         self.parent = parent
         self.path = path
+
+
 class FileSystem:
     def __init__(self):
         self.current_dir = None
@@ -16,6 +18,7 @@ class FileSystem:
     def cd(self, path):
         # go back 1 level
         if path == "..":
+            # check if root
             if self.current_dir.name != "":
                 self.current_dir = self.current_dir.parent
         # go back to root
@@ -32,6 +35,7 @@ class FileSystem:
                 else:
                     print("Directory does not exist")
                     break
+
     def ls(self):
         for directory in self.current_dir.subdirectories:
             print(directory)
@@ -39,6 +43,9 @@ class FileSystem:
             print(file)
 
     def mkdir(self, directory_name):
+        if not re.match('^[^<>:"/\\|?*]+$', directory_name):
+            print("Invalid directory name")
+            return
         new_directory = Directory(directory_name, self.current_dir, self.current_dir.path + "/" + directory_name)
         self.current_dir.subdirectories[directory_name] = new_directory
 
