@@ -37,23 +37,29 @@ class FileSystem:
                     break
 
     def ls(self):
+        print("Directories:")
         for directory in self.current_dir.subdirectories:
-            print(directory)
+            print("\t-" + directory)
+        print("Files:")
         for file in self.current_dir.files:
-            print(file)
+            print("\t-" + file)
 
-    def mkdir(self, directory_name):
-        if not re.match('^[^<>:"/\\|?*]+$', directory_name):
-            print("Invalid directory name")
-            return
-        new_directory = Directory(directory_name, self.current_dir, self.current_dir.path + "/" + directory_name)
-        self.current_dir.subdirectories[directory_name] = new_directory
-
+    def mkdir(self, path):
+        directories = path.split("/")
+        current_dir = self.current_dir
+        for d in directories:
+            if d not in current_dir.subdirectories:
+                if not re.match('^[^<>:"/\\|?*]+$', d):
+                    print("Invalid directory name")
+                else:
+                    new_directory = Directory(d, current_dir, current_dir.path + "/" + d)
+                    current_dir.subdirectories[d] = new_directory
+            current_dir = current_dir.subdirectories[d]
     def touch(self, file_name):
         if not re.match('^[^<>:"/\\|?*]+$', file_name):
             print("Invalid file name")
-            return
-        self.current_dir.files.append(file_name)
+        else:
+            self.current_dir.files.append(file_name)
 
     def main(self):
         self.current_dir = self.root
