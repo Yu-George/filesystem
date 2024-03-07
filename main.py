@@ -30,7 +30,6 @@ class FileSystem:
         else:
             directories = path.split("/")
             for d in directories:
-                print(d)
                 if d == "":
                     continue
                 if d in self.current_dir.subdirectories:
