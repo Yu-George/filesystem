@@ -15,6 +15,9 @@ class FileSystem:
         self.current_dir = None
         self.root = Directory("", None, "")
 
+    def cdroot(self) -> None:
+        self.current_dir = self.root
+
     def cd(self, path):
         # go back 1 level
         if path == "..":
@@ -23,7 +26,7 @@ class FileSystem:
                 self.current_dir = self.current_dir.parent
         # go back to root
         elif path == "~" or path == "":
-            self.current_dir = self.root
+            self.cdroot()
         else:
             directories = path.split("/")
             for d in directories:
@@ -49,12 +52,15 @@ class FileSystem:
             directories = path.split("/")
             current_dir = self.current_dir
             for d in directories:
-                if d not in current_dir.subdirectories:
-                    if not re.match('^[^<>:"/\\|?*]+$', d):
-                        print("Invalid directory name")
-                    else:
-                        new_directory = Directory(d, current_dir, current_dir.path + "/" + d)
-                        current_dir.subdirectories[d] = new_directory
+                if d in current_dir.subdirectories:
+                    print("Directory already exists")
+                    return
+                if not re.match('^[^<>:"/\\|?*]+$', d):
+                    print("Invalid directory name")
+                    return
+                else:
+                    new_directory = Directory(d, current_dir, current_dir.path + "/" + d)
+                    current_dir.subdirectories[d] = new_directory
                 current_dir = current_dir.subdirectories[d]
 
     def touch(self, file_name):
@@ -72,6 +78,8 @@ class FileSystem:
                     break
                 case ["cd", path]:
                     self.cd(path)
+                case ["cd"]:
+                    self.cdroot()
                 case ["mkdir", *dirs]:
                     self.mkdir(dirs)
                 case ["ls"]:
@@ -80,6 +88,7 @@ class FileSystem:
                     self.touch(file)
                 case _:
                     print("Invalid Command")
+
 
 if __name__ == "__main__":
     fs = FileSystem()
