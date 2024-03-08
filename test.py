@@ -9,7 +9,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_mkdir_single(self):
         self.fs.mkdir(["testDir"])
-        self.assertTrue("testDir" in self.fs.current_dir.subdirectories)  # add assertion here
+        self.assertTrue("testDir" in self.fs.current_dir.subdirectories)
 
     def test_mkdir_2_dir_deep(self):
         self.fs.mkdir(["testDir1/testDir2"])
@@ -48,6 +48,7 @@ class MyTestCase(unittest.TestCase):
     def test_touch_invalid(self):
         self.fs.touch("invalid?")
         self.assertFalse("invalid?" in self.fs.current_dir.files)
+
 
 if __name__ == '__main__':
     unittest.main()
