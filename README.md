@@ -21,9 +21,9 @@ Run the File System script using Python 3.10:
 python main.py
 ```
 
-Run the tests using Python 3.10:
+Run the tests also using Python 3.10:
 ```
-python main.py
+python test.py
 ```
 
 ## Documentation
