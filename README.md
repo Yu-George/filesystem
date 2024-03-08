@@ -38,3 +38,5 @@ Commands:
 `mkdir`: Creates a directory with user given path. Supports creating subdirectories on deeper levels (eg: `mkdir dir1/dir2`). Also multple directories on the same level (eg: `mkdir dir1 dir2`)
 
 `exit`: Exits the program
+
+![Demo Image](https://i.imgur.com/Bk5eqlb.png)
